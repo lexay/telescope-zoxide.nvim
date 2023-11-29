@@ -4,8 +4,8 @@
 
 Telescope extension for `neovim` powered by `zoxide`.
 
-Navigate between the directories `zoxide` knows about, with the prompt from
-`telescope`, and open them in `netrw`.
+Change the current working directory to a directory `zoxide` knows about, with the prompt from
+`telescope`.
 
 ### Installation
 
