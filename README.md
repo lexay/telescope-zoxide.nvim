@@ -33,3 +33,11 @@ use {
   end
 }
 ```
+
+### Default mapping
+
+In the `telescope` config you can assign it to something like this:
+
+```
+vim.keymap.set("n", "<leader>fz", "<cmd>Telescope zoxide<cr>")
+```
