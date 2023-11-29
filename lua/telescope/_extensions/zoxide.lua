@@ -37,7 +37,7 @@ M.zi = function(opts)
           actions.close(bufnr)
           local selection = action_state.get_selected_entry()
           vim.cmd("cd " .. selection[1])
-          print("CWD changed to " .. selection[1])
+          vim.cmd("pwd")
         end)
         return true
       end,
