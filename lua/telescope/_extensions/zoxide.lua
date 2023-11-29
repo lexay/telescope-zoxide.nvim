@@ -6,6 +6,8 @@ end
 local pickers = require("telescope.pickers")
 local finders = require("telescope.finders")
 local conf = require("telescope.config").values
+local actions = require("telescope.actions")
+local action_state = require("telescope.actions.state")
 local io = require("io")
 
 local M = {}
@@ -30,6 +32,15 @@ M.netrw_zi = function(opts)
         results = results,
       }),
       sorter = conf.generic_sorter(opts),
+      attach_mappings = function(bufnr, map)
+        actions.select_default:replace(function()
+          actions.close(bufnr)
+          local selection = action_state.get_selected_entry()
+          vim.cmd("cd " .. selection[1])
+          print("CWD changed to " .. selection[1])
+        end)
+        return true
+      end,
     })
     :find()
 end
