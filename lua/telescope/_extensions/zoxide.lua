@@ -12,7 +12,7 @@ local io = require("io")
 
 local M = {}
 
-M.netrw_zi = function(opts)
+M.zi = function(opts)
   local command = "zoxide query --list"
   local handle = io.popen(command)
   local entries = handle:read("a")
@@ -47,6 +47,6 @@ end
 
 return telescope.register_extension({
   exports = {
-    zoxide = M.netrw_zi,
+    zoxide = M.zi,
   },
 })
