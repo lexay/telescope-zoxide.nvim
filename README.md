@@ -41,7 +41,7 @@ vim.keymap.set("n", "<leader>fz", "<cmd>Telescope zoxide<cr>")
 ```
 
 If openning the `find_files` telescope prompt or a file explorer is the first thing that you do, when
-switching to the project dir, you may confsider chaining the two commands together:
+switching to the project dir, you may consider chaining the two commands together:
 
 ```
 vim.keymap.set("n", "<leader>fz", "<cmd>Telescope zoxide<cr><cmd>Telescope find_files<cr>")
@@ -50,5 +50,5 @@ vim.keymap.set("n", "<leader>fz", "<cmd>Telescope zoxide<cr><cmd>Telescope find_
 or
 
 ```
-vim.keymap.set("n", "<leader>fz", "<cmd>Telescope zoxide<cr><cmf>Lexplore<cr>")
+vim.keymap.set("n", "<leader>fz", "<cmd>Telescope zoxide<cr><cmd>Lexplore<cr>")
 ```
