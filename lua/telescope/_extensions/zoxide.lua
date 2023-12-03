@@ -38,6 +38,21 @@ M.zi = function(opts)
           local selection = action_state.get_selected_entry()
           vim.api.nvim_set_current_dir(selection[1])
           print(vim.fn.getcwd())
+
+          local all_buffs = vim.api.nvim_list_bufs()
+          local unnamed_buf
+
+          for _, i in ipairs(all_buffs) do
+            if vim.api.nvim_buf_get_option(i, "buflisted") and vim.api.nvim_buf_get_name(i) == "" then
+              unnamed_buf = i
+            end
+          end
+
+          if not unnamed_buf then
+            unnamed_buf = vim.api.nvim_create_buf(true, false)
+          end
+
+          vim.api.nvim_set_current_buf(unnamed_buf)
         end)
         return true
       end,
