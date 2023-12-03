@@ -36,8 +36,8 @@ M.zi = function(opts)
         actions.select_default:replace(function()
           actions.close(bufnr)
           local selection = action_state.get_selected_entry()
-          vim.cmd("cd " .. selection[1])
-          vim.cmd("pwd")
+          vim.api.nvim_set_current_dir(selection[1])
+          print(vim.fn.getcwd())
         end)
         return true
       end,
