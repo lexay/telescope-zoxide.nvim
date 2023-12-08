@@ -23,39 +23,33 @@ function _G.zoxide_list()
   return results
 end
 
+local function remap(bufnr, command)
+  return function()
+    actions.close(bufnr)
 
+    local selection = action_state.get_selected_entry()
+    vim.api.nvim_set_current_dir(selection[1])
+    print(vim.fn.getcwd())
+    vim.cmd(command)
+  end
+end
+
+local M = {}
+
+function M.zi(opts)
   opts = opts or {}
 
   pickers
     .new(opts, {
       prompt_title = "Change directory",
       finder = finders.new_table({
-        results = results,
         results = _G.zoxide_list(),
       }),
       sorter = conf.generic_sorter(opts),
       attach_mappings = function(bufnr, map)
-        actions.select_default:replace(function()
-          actions.close(bufnr)
-          local selection = action_state.get_selected_entry()
-          vim.api.nvim_set_current_dir(selection[1])
-          print(vim.fn.getcwd())
-
-          local all_buffs = vim.api.nvim_list_bufs()
-          local unnamed_buf
-
-          for _, i in ipairs(all_buffs) do
-            if vim.api.nvim_buf_get_option(i, "buflisted") and vim.api.nvim_buf_get_name(i) == "" then
-              unnamed_buf = i
-            end
-          end
-
-          if not unnamed_buf then
-            unnamed_buf = vim.api.nvim_create_buf(true, false)
-          end
-
-          vim.api.nvim_set_current_buf(unnamed_buf)
-        end)
+        actions.select_default:replace(remap(bufnr, "enew"))
+        actions.select_vertical:replace(function() end)
+        actions.select_tab:replace(remap(bufnr, "tabnew"))
         return true
       end,
     })
