@@ -10,9 +10,7 @@ local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
 local io = require("io")
 
-local M = {}
-
-M.zi = function(opts)
+function _G.zoxide_list()
   local command = "zoxide query --list"
   local handle = io.popen(command)
   local entries = handle:read("a")
@@ -22,6 +20,9 @@ M.zi = function(opts)
   for line in entries:gmatch("[^\r\n]+") do
     table.insert(results, line)
   end
+  return results
+end
+
 
   opts = opts or {}
 
@@ -30,6 +31,7 @@ M.zi = function(opts)
       prompt_title = "Change directory",
       finder = finders.new_table({
         results = results,
+        results = _G.zoxide_list(),
       }),
       sorter = conf.generic_sorter(opts),
       attach_mappings = function(bufnr, map)
