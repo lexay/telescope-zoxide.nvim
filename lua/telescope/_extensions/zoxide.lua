@@ -64,6 +64,7 @@ end
 
 return telescope.register_extension({
   exports = {
+    zi = M.zi,
     zoxide = M.zi,
   },
 })
