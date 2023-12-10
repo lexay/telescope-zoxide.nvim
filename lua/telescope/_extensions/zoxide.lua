@@ -34,9 +34,7 @@ local function remap(bufnr, command)
   end
 end
 
-local M = {}
-
-function M.zi(opts)
+local function zi(opts)
   opts = opts or {}
 
   pickers
@@ -58,7 +56,7 @@ end
 
 return telescope.register_extension({
   exports = {
-    zi = M.zi,
-    zoxide = M.zi,
+    zi = zi,
+    zoxide = zi,
   },
 })
