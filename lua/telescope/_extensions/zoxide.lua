@@ -41,7 +41,7 @@ local function zi(opts)
 
   pickers
     .new(opts, {
-      prompt_title = "Change directory",
+      prompt_title = "Change Directory",
       finder = finders.new_table({
         results = _G.zoxide_list(),
       }),
