@@ -11,7 +11,7 @@ local action_state = require("telescope.actions.state")
 local io = require("io")
 
 function _G.zoxide_list()
-  local command = "zoxide query --list"
+  local command = "zoxide query --list --score"
   local handle = io.popen(command)
   local entries = handle:read("a")
   handle.close()
@@ -28,8 +28,10 @@ local function remap(bufnr, command)
     actions.close(bufnr)
 
     local selection = action_state.get_selected_entry()
-    vim.api.nvim_set_current_dir(selection[1])
+    local path = selection[1]:match("/.+")
+    vim.api.nvim_set_current_dir(path)
     print(vim.fn.getcwd())
+    io.popen("zoxide add " .. path):close()
     vim.cmd(command)
   end
 end
