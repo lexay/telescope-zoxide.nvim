@@ -28,7 +28,7 @@ local function remap(bufnr, command)
     actions.close(bufnr)
 
     local selection = action_state.get_selected_entry()
-    local path = selection[1]:match("/.+")
+    local path = selection[1]:match("/.*")
     vim.api.nvim_set_current_dir(path)
     print(vim.fn.getcwd())
     io.popen("zoxide add " .. path):close()
