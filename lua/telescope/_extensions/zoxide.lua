@@ -23,16 +23,6 @@ function _G.zoxide_list()
   return results
 end
 
-local function clean_noname_bufs()
-  local all_buffs = vim.api.nvim_list_bufs()
-
-  for _, buf in ipairs(all_buffs) do
-    if vim.api.nvim_buf_get_name(buf) == "" and vim.api.nvim_buf_get_number(buf) ~= vim.api.nvim_buf_get_number(0) then
-      vim.api.nvim_buf_delete(buf, {})
-    end
-  end
-end
-
 local function remap(bufnr, command)
   return function()
     actions.close(bufnr)
@@ -43,7 +33,6 @@ local function remap(bufnr, command)
     print(vim.fn.getcwd())
     io.popen("zoxide add " .. path):close()
     vim.cmd(command)
-    clean_noname_bufs()
   end
 end
 
