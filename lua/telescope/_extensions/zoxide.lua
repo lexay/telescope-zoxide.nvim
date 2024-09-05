@@ -29,7 +29,11 @@ local function remap(bufnr, command)
     vim.cmd(command)
     local selection = action_state.get_selected_entry()
     local path = selection[1]:match("/.*") or selection[1]:match("%a:[\\/].*")
-    vim.api.nvim_set_current_dir(path)
+    if command == "tabnew" then
+      vim.cmd("tcd " .. path)
+    else
+      vim.cmd("lcd " .. path)
+    end
     print(vim.fn.getcwd())
     io.popen("zoxide add " .. path):close()
   end
@@ -47,7 +51,7 @@ local function zi(opts)
       sorter = conf.generic_sorter(opts),
       attach_mappings = function(bufnr, map)
         actions.select_default:replace(remap(bufnr, "enew"))
-        actions.select_vertical:replace(function() end)
+        actions.select_vertical:replace(remap(bufnr, "vnew"))
         actions.select_tab:replace(remap(bufnr, "tabnew"))
         return true
       end,
