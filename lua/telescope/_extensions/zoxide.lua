@@ -23,18 +23,56 @@ function _G.zoxide_list()
   return results
 end
 
-local function remap(bufnr, command)
+local function find_existing_bufname(path)
+  local all_buffers = vim.api.nvim_list_bufs()
+
+  for _, buf in ipairs(all_buffers) do
+    local bufname = vim.api.nvim_buf_get_name(buf)
+    if bufname:find(path, 1, true) then
+      return bufname
+    end
+  end
+end
+
+local function open_new_buf(buftype)
+  local cmd_list = {
+    default = "enew",
+    vertical = "vnew",
+    tab = "tabnew",
+  }
+
+  vim.cmd(cmd_list[buftype])
+end
+
+local function open_existing_buf(buftype, path)
+  local cmd_list = {
+    default = "edit",
+    vertical = "vsplit",
+    tab = "tabedit",
+  }
+
+  vim.cmd(cmd_list[buftype] .. " " .. path)
+end
+
+local function change_local_cwd(path)
+  vim.cmd("lcd" .. " " .. path)
+  print(vim.fn.getcwd())
+end
+
+local function remap(bufnr, buftype)
   return function()
     actions.close(bufnr)
-    vim.cmd(command)
     local selection = action_state.get_selected_entry()
     local path = selection[1]:match("/.*") or selection[1]:match("%a:[\\/].*")
-    if command == "tabnew" then
-      vim.cmd("tcd " .. path)
+    local existing_bufname = find_existing_bufname(path)
+
+    if existing_bufname then
+      open_existing_buf(buftype, existing_bufname)
     else
-      vim.cmd("lcd " .. path)
+      open_new_buf(buftype)
     end
-    print(vim.fn.getcwd())
+
+    change_local_cwd(path)
     io.popen("zoxide add " .. path):close()
   end
 end
@@ -50,9 +88,9 @@ local function zi(opts)
       }),
       sorter = conf.generic_sorter(opts),
       attach_mappings = function(bufnr, map)
-        actions.select_default:replace(remap(bufnr, "enew"))
-        actions.select_vertical:replace(remap(bufnr, "vnew"))
-        actions.select_tab:replace(remap(bufnr, "tabnew"))
+        actions.select_default:replace(remap(bufnr, "default"))
+        actions.select_vertical:replace(remap(bufnr, "vertical"))
+        actions.select_tab:replace(remap(bufnr, "tab"))
         return true
       end,
     })
