@@ -23,18 +23,21 @@ function _G.zoxide_list()
   return results
 end
 
-local function remap(bufnr, command)
+local function change_local_cwd(path)
+  vim.cmd("lcd" .. " " .. path)
+  print(vim.fn.getcwd())
+end
+
+local function remap(bufnr, buftype)
   return function()
     actions.close(bufnr)
     vim.cmd(command)
     local selection = action_state.get_selected_entry()
     local path = selection[1]:match("/.*") or selection[1]:match("%a:[\\/].*")
-    if command == "tabnew" then
-      vim.cmd("tcd " .. path)
     else
-      vim.cmd("lcd " .. path)
     end
-    print(vim.fn.getcwd())
+
+    change_local_cwd(path)
     io.popen("zoxide add " .. path):close()
   end
 end
