@@ -23,18 +23,53 @@ function _G.zoxide_list()
   return results
 end
 
+local function find_existing_bufname(path)
+  local all_buffers = vim.api.nvim_list_bufs()
+
+  for _, buf in ipairs(all_buffers) do
+    local bufname = vim.api.nvim_buf_get_name(buf)
+    if bufname:find(path, 1, true) then
+      return bufname
+    end
+  end
+end
+
+local function open_new_buf(wintype)
+  local commands = {
+    default = "enew",
+    vertical = "vnew",
+    tab = "tabnew",
+  }
+
+  vim.cmd(commands[wintype])
+end
+
+local function open_existing_buf(wintype, bufname)
+  local commands = {
+    default = "edit",
+    vertical = "vsplit",
+    tab = "tabedit",
+  }
+
+  vim.cmd(commands[wintype] .. " " .. bufname)
+end
+
 local function change_local_cwd(path)
   vim.cmd("lcd" .. " " .. path)
   print(vim.fn.getcwd())
 end
 
-local function remap(bufnr, buftype)
+local function remap(bufnr, wintype)
   return function()
     actions.close(bufnr)
-    vim.cmd(command)
     local selection = action_state.get_selected_entry()
     local path = selection[1]:match("/.*") or selection[1]:match("%a:[\\/].*")
+    local bufname = find_existing_bufname(path)
+
+    if bufname then
+      open_existing_buf(wintype, bufname)
     else
+      open_new_buf(wintype)
     end
 
     change_local_cwd(path)
@@ -53,9 +88,9 @@ local function zi(opts)
       }),
       sorter = conf.generic_sorter(opts),
       attach_mappings = function(bufnr, map)
-        actions.select_default:replace(remap(bufnr, "enew"))
-        actions.select_vertical:replace(remap(bufnr, "vnew"))
-        actions.select_tab:replace(remap(bufnr, "tabnew"))
+        actions.select_default:replace(remap(bufnr, "default"))
+        actions.select_vertical:replace(remap(bufnr, "vertical"))
+        actions.select_tab:replace(remap(bufnr, "tab"))
         return true
       end,
     })
