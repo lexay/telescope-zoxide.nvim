@@ -37,6 +37,7 @@ end
 local function open_new_buf(wintype)
   local commands = {
     default = "enew",
+    horizontal = "new",
     vertical = "vnew",
     tab = "tabnew",
   }
@@ -47,6 +48,7 @@ end
 local function open_existing_buf(wintype, bufname)
   local commands = {
     default = "edit",
+    horizontal = "split",
     vertical = "vsplit",
     tab = "tabedit",
   }
@@ -89,6 +91,7 @@ local function zi(opts)
       sorter = conf.generic_sorter(opts),
       attach_mappings = function(bufnr, map)
         actions.select_default:replace(remap(bufnr, "default"))
+        actions.select_horizontal:replace(remap(bufnr, "horizontal"))
         actions.select_vertical:replace(remap(bufnr, "vertical"))
         actions.select_tab:replace(remap(bufnr, "tab"))
         return true
