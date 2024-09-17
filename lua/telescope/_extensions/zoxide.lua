@@ -94,6 +94,12 @@ local function zi(opts)
         actions.select_horizontal:replace(remap(bufnr, "horizontal"))
         actions.select_vertical:replace(remap(bufnr, "vertical"))
         actions.select_tab:replace(remap(bufnr, "tab"))
+        actions.add_selection:replace(function() end)
+        actions.remove_selection:replace(function() end)
+        actions.toggle_selection:replace(function() end)
+        actions.select_all:replace(function() end)
+        actions.drop_all:replace(function() end)
+        actions.toggle_all:replace(function() end)
         return true
       end,
     })
