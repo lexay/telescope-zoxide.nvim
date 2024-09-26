@@ -28,7 +28,13 @@ local function find_existing_bufname(path)
 
   for _, buf in ipairs(all_buffers) do
     local bufname = vim.api.nvim_buf_get_name(buf)
-    if bufname:find(path, 1, true) then
+    local separator = path:match("[\\/]")
+
+    if path == "/" then
+      separator = ""
+    end
+
+    if bufname:find(path .. separator, 1, true) then
       return bufname
     end
   end
