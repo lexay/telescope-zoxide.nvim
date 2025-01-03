@@ -51,7 +51,7 @@ local function open_new_buf(wintype)
   vim.cmd(commands[wintype])
 end
 
-local function open_existing_buf(wintype, bufname)
+local function open_existing_buf(bufname, wintype)
   local commands = {
     default = "edit",
     horizontal = "split",
@@ -75,7 +75,7 @@ local function remap(bufnr, wintype)
     local bufname = find_existing_bufname(path)
 
     if bufname then
-      open_existing_buf(wintype, bufname)
+      open_existing_buf(bufname, wintype)
     else
       open_new_buf(wintype)
     end
@@ -95,7 +95,7 @@ local function zi(opts)
         results = _G.zoxide_list(),
       }),
       sorter = conf.generic_sorter(opts),
-      attach_mappings = function(bufnr, map)
+      attach_mappings = function(bufnr)
         actions.select_default:replace(remap(bufnr, "default"))
         actions.select_horizontal:replace(remap(bufnr, "horizontal"))
         actions.select_vertical:replace(remap(bufnr, "vertical"))
